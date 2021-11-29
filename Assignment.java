@@ -29,7 +29,7 @@ public class Assignment{
 			stmt = con.createStatement();
 			System.out.println("Database Connected!!!");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 	}
@@ -46,7 +46,7 @@ public class Assignment{
 			}
 			
 		}catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 	}
@@ -62,17 +62,19 @@ public class Assignment{
 	public void checkATMPin (int cardNumber,String atmPIN) throws Exception {
 
 		try {
-			ResultSet rs = stmt.executeQuery("select atmPIN from ATM where cardNumber="+cardNumber);
 			
-			if(rs.next()) {
-				if(!atmPIN.equals(rs.getString(1))){
-					stmt.executeUpdate("insert into Logs (Description,accountNumber) values ('Entered Invalid Pin',"+accountNumber+")");
-					throw new Exception("Entered Invalid Pin");
-				}
+			validateATMPin(atmPIN);
+			
+			ResultSet rs = stmt.executeQuery("select atmPIN from ATM where cardNumber="+cardNumber);
+			rs.next();
+			
+			if(!atmPIN.equals(rs.getString(1))){
+				stmt.executeUpdate("insert into Logs (Description,accountNumber) values ('Entered Invalid Pin',"+accountNumber+")");
+				throw new Exception("Entered Invalid Pin");
 			}
 		
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 	}
@@ -92,7 +94,7 @@ public class Assignment{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 	}
@@ -109,7 +111,7 @@ public class Assignment{
 				}while(rs.next());
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 		
@@ -134,7 +136,7 @@ public class Assignment{
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 		
@@ -157,11 +159,7 @@ public class Assignment{
 			System.out.print("Enter 4 digit ATM PIN: ");
 			String atmPIN = sc.nextLine();
 			
-			//validate ATM pin
-			obj.validateATMPin(atmPIN);
-			
-			
-			//compare ATM pin with database
+			//validate and compare ATM pin with database
 			obj.checkATMPin(cardNumber, atmPIN);
 						
 			//authentication completed
@@ -195,7 +193,7 @@ public class Assignment{
 			obj.con.close();
 					
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}
 		
 		sc.close();
